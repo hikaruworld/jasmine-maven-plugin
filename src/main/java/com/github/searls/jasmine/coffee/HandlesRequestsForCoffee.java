@@ -18,7 +18,7 @@ public class HandlesRequestsForCoffee {
 	
 	public void handle(Request baseRequest, HttpServletResponse response, Resource resource, boolean bareOption) throws IOException {
 		baseRequest.setHandled(true);
-		String javascript = compileCoffee(resource);
+		String javascript = compileCoffee(resource, bareOption);
 		setHeaders(response, resource, javascript);
 		writeResponse(response, javascript);
 	}
@@ -33,9 +33,9 @@ public class HandlesRequestsForCoffee {
 		response.setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(javascript.length()));
 	}
 
-	private String compileCoffee(Resource resource) {
+	private String compileCoffee(Resource resource, boolean bareOption) {
 		try {
-			return coffeeScript.compile(IOUtils.toString(resource.getInputStream()));
+			return coffeeScript.compile(IOUtils.toString(resource.getInputStream()), bareOption);
 		} catch(Exception e) {
 			return buildsJavaScriptToWriteFailureHtml.build("CoffeeScript Error: failed to compile <code>"+resource.getName()+"</code>. <br/>Error message:<br/><br/><code>"+e.getMessage()+"</code>");
 		}

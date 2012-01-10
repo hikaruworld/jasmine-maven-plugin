@@ -23,6 +23,7 @@ import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
 @RunWith(MockitoJUnitRunner.class)
 public class HandlesRequestsForCoffeeTest {
 	private static final String COFFEE = "coffee";
+	private static final boolean BARE_OPTION = false;
 
 	@InjectMocks HandlesRequestsForCoffee subject = new HandlesRequestsForCoffee();
 	
@@ -40,7 +41,7 @@ public class HandlesRequestsForCoffeeTest {
 	
 	@Before
 	public void defaultCoffeeStubbing() throws IOException {
-		when(coffeeScript.compile(COFFEE)).thenReturn("blarg!");
+		when(coffeeScript.compile(COFFEE, BARE_OPTION)).thenReturn("blarg!");
 	}
 	
 	@Test
@@ -70,7 +71,7 @@ public class HandlesRequestsForCoffeeTest {
 	@Test
 	public void whenCoffeeCompilesThenWriteIt() throws IOException {
 		String expected = "javascript";
-		when(coffeeScript.compile(COFFEE)).thenReturn(expected);
+		when(coffeeScript.compile(COFFEE, BARE_OPTION)).thenReturn(expected);
 
 		subject.handle(baseRequest, response, resource, false);
 		
@@ -79,12 +80,24 @@ public class HandlesRequestsForCoffeeTest {
 	}
 
 	@Test
+	public void whenCoffeeCompilesThenWriteItBareOption() throws IOException {
+		String expected = "javascript with bare";
+		boolean bareTrue = true;
+		when(coffeeScript.compile(COFFEE, bareTrue)).thenReturn(expected);
+
+		subject.handle(baseRequest, response, resource, true);
+		
+		verify(coffeeScript).compile(COFFEE, bareTrue);
+		verify(response.getWriter()).write(expected);
+	}
+
+	@Test
 	public void whenCoffeeCompilationFailsThenWriteTheErrorOutInItsStead() throws IOException {
 		String name = "some-file.coffee";
 		String message = "messages";
 		String expected = "CoffeeScript Error: failed to compile <code>"+name+"</code>. <br/>Error message:<br/><br/><code>"+message+"</code>";
 		when(resource.getName()).thenReturn(name);
-		when(coffeeScript.compile(COFFEE)).thenThrow(new RuntimeException(message));
+		when(coffeeScript.compile(COFFEE, BARE_OPTION)).thenThrow(new RuntimeException(message));
 		when(buildsJavaScriptToWriteFailureHtml.build(expected)).thenReturn("win");
 
 		subject.handle(baseRequest, response, resource, false);
