@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.github.searls.jasmine.coffee.CoffeeScript.CoffeeEval;
 
 public class CoffeeScriptIntegrationTest {
 
@@ -63,7 +62,7 @@ public class CoffeeScriptIntegrationTest {
 	public void itReliesOnTheCache() throws Exception {
 		String expected = "win";
 		subject.compile(COFFEE, BARE_OPTION);
-		CoffeeEval eval = new CoffeeEval(COFFEE, BARE_OPTION);
+		CoffeeCup eval = new CoffeeCup(COFFEE, BARE_OPTION);
 		injectFakeCache(Collections.singletonMap(eval.getCacheKey(), expected));
 		
 		String result = subject.compile(COFFEE, BARE_OPTION);
@@ -75,7 +74,7 @@ public class CoffeeScriptIntegrationTest {
 	public void itReliesOnTheCacheBareOptionChangeActive() throws Exception {
 		final String unexpected = "bare false";
 		subject.compile(COFFEE, BARE_OPTION);
-		final CoffeeEval eval = new CoffeeEval(COFFEE, BARE_OPTION);
+		final CoffeeCup eval = new CoffeeCup(COFFEE, BARE_OPTION);
 		injectFakeCache(new HashMap<String, String>(){{put(eval.getCacheKey(), unexpected);}});
 		
 		String result = subject.compile(COFFEE, true);
