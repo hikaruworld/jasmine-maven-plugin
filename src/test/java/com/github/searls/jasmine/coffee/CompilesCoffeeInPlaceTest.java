@@ -19,6 +19,7 @@ public class CompilesCoffeeInPlaceTest {
 	
 	private static final String COFFEE = "koohii";
 	private static final String JAVA_SCRIPT = "jawa script";
+	private static final String BARE_JAVA_SCRIPT = "bare java script";
 	private static final boolean BARE_OPTION = false;
 
 	@InjectMocks CompilesCoffeeInPlace subject = new CompilesCoffeeInPlace();
@@ -40,7 +41,16 @@ public class CompilesCoffeeInPlaceTest {
 		verify(javaScriptWriter).write(JAVA_SCRIPT);
 		verify(javaScriptWriter).close();
 	}
-	
-	
-	
+
+	@Test
+	public void writesBareCompiledScript() throws Exception {
+		when(fileUtilsWrapper.readFileToString(coffeeFile)).thenReturn(COFFEE);
+		whenNew(FileWriter.class).withArguments(coffeeFile,false).thenReturn(javaScriptWriter);
+		when(coffeeScript.compile(COFFEE, true)).thenReturn(BARE_JAVA_SCRIPT);
+		
+		subject.compile(coffeeFile, true);
+
+		verify(javaScriptWriter).write(BARE_JAVA_SCRIPT);
+		verify(javaScriptWriter).close();
+	}
 }
