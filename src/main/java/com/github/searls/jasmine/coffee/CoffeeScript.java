@@ -35,24 +35,59 @@ public class CoffeeScript {
 	
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
-	/**
-	 * @deprecated {@link #compile(String, boolean)}
-	 */
-	@Deprecated
-	public String compile(String coffee) throws IOException {
-		return this.compile(coffee, false);
-	}
-
 	public String compile(String coffee, boolean bareOption) throws IOException {
-		String escapedCoffee = StringEscapeUtils.escapeJavaScript(coffee);
-		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(escapedCoffee);
+		CoffeeEval coffeeEval = new CoffeeEval(coffee, bareOption);
+		String escapedCoffee = coffeeEval.getCacheKey();
+		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(coffeeEval);
 	}
 
-	private String compileAndCache(String input) {
-		ScriptResult scriptResult = htmlPage.get().executeJavaScript(String.format("CoffeeScript.compile(\"%s\");", input));
+	private String compileAndCache(CoffeeEval inputEval) {
+		ScriptResult scriptResult = htmlPage.get().executeJavaScript(inputEval.createCoffeeScriptFunction());
 		String result = (String) scriptResult.getJavaScriptResult();
-		cache.put(input,result);
+		cache.put(inputEval.getCacheKey(),result);
 		return result;
+	}
+	
+	public static class CoffeeEval {
+		private String coffee;
+		private boolean bareOption;
+		
+		private String escapeCoffeeCache;
+		
+		private static final String BARE_OPTION_ENABLED = "{bare: true}";
+		
+		public CoffeeEval(String coffee, boolean bareOption) {
+			this.coffee = coffee;
+			this.bareOption = bareOption;
+		}
+
+		public String getCacheKey() {
+			return String.format("Eval:%s\n\tOptions:%s", this.escape(), getOptions());
+		}
+		
+		public String escape() {
+			if (this.escapeCoffeeCache == null) {
+				this.escapeCoffeeCache = StringEscapeUtils.escapeJavaScript(this.coffee);
+			}
+			return this.escapeCoffeeCache;
+		}
+		
+		public String getOptions() {
+			return this.bareOption ? BARE_OPTION_ENABLED : null;
+		}
+		
+		public String createCoffeeScriptFunction() {
+			StringBuilder function = new StringBuilder();
+			function.append("CoffeeScript.compile(\"");
+			function.append(escape());
+			function.append("\"");
+			if (bareOption) {
+				function.append(", ");
+				function.append(BARE_OPTION_ENABLED);
+			}
+			function.append(");");
+			return function.toString();
+		}
 	}
 
 }

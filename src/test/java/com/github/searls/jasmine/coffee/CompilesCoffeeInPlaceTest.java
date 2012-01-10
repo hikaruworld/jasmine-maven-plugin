@@ -19,6 +19,7 @@ public class CompilesCoffeeInPlaceTest {
 	
 	private static final String COFFEE = "koohii";
 	private static final String JAVA_SCRIPT = "jawa script";
+	private static final boolean BARE_OPTION = false;
 
 	@InjectMocks CompilesCoffeeInPlace subject = new CompilesCoffeeInPlace();
 	
@@ -32,9 +33,9 @@ public class CompilesCoffeeInPlaceTest {
 	public void writesCompiledScript() throws Exception {
 		when(fileUtilsWrapper.readFileToString(coffeeFile)).thenReturn(COFFEE);
 		whenNew(FileWriter.class).withArguments(coffeeFile,false).thenReturn(javaScriptWriter);
-		when(coffeeScript.compile(COFFEE)).thenReturn(JAVA_SCRIPT);
+		when(coffeeScript.compile(COFFEE, BARE_OPTION)).thenReturn(JAVA_SCRIPT);
 		
-		subject.compile(coffeeFile);
+		subject.compile(coffeeFile, BARE_OPTION);
 
 		verify(javaScriptWriter).write(JAVA_SCRIPT);
 		verify(javaScriptWriter).close();

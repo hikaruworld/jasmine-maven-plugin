@@ -30,22 +30,50 @@ public class CoffeeScriptIntegrationTest {
 		"  });\n\n" +
 		"}).call(this);\n";
 
+	private static final String BARE_JAVASCRIPT = 
+			"describe(\"HelloWorld\", function() {\n" + 
+			"  return it(\"should say hello\", function() {\n" + 
+			"    var hello_world;\n" + 
+			"    hello_world = new HelloWorld;\n" + 
+			"    return expect(hello_world.greeting()).toBe(\"Hello, World\");\n" + 
+			"  });\n" + 
+			"});\n";
+	
+	private static final boolean BARE_OPTION = false;
+
 	private CoffeeScript subject = new CoffeeScript();
 
 	@Test
 	public void itCompiles() throws IOException {
-		String result = subject.compile(COFFEE);
-
+		String result = subject.compile(COFFEE, BARE_OPTION);
+		
 		assertThat(result,is(JAVASCRIPT));
+	}
+
+	@Test
+	public void itCompilesBareTrue() throws IOException {
+		String result = subject.compile(COFFEE, true);
+		
+		assertThat(result,is(BARE_JAVASCRIPT));
 	}
 
 	@Test
 	public void itReliesOnTheCache() throws Exception {
 		String expected = "win";
-		subject.compile(COFFEE);
+		subject.compile(COFFEE, BARE_OPTION);
 		injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+		
+		String result = subject.compile(COFFEE, BARE_OPTION);
+		
+		assertThat(result,is(expected));
+	}
 
-		String result = subject.compile(COFFEE);
+	@Test
+	public void itReliesOnTheCacheBareOptionChangeActive() throws Exception {
+		String expected = "bare false";
+		subject.compile(COFFEE, BARE_OPTION);
+		injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+		String result = subject.compile(COFFEE, true);
 
 		assertThat(result,is(expected));
 	}
