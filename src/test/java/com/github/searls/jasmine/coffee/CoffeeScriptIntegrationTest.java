@@ -70,6 +70,7 @@ public class CoffeeScriptIntegrationTest {
 		assertThat(result,is(expected));
 	}
 
+	@SuppressWarnings("serial")
 	@Test
 	public void itReliesOnTheCacheBareOptionChangeActive() throws Exception {
 		final String unexpected = "bare false";

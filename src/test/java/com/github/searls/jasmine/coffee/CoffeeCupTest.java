@@ -2,11 +2,9 @@ package com.github.searls.jasmine.coffee;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Field;
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
 public class CoffeeCupTest {
