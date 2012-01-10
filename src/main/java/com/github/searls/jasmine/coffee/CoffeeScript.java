@@ -62,7 +62,7 @@ public class CoffeeScript {
 		}
 
 		public String getCacheKey() {
-			return String.format("Eval:%s\n\tOptions:%s", this.escape(), getOptions());
+			return String.format("Eval#%s,Options#%s", this.escape(), getOptions());
 		}
 		
 		public String escape() {

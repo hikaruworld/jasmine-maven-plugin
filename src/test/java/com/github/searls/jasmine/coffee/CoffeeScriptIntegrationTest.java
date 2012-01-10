@@ -6,10 +6,12 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Test;
+
+import com.github.searls.jasmine.coffee.CoffeeScript.CoffeeEval;
 
 public class CoffeeScriptIntegrationTest {
 
@@ -37,7 +39,7 @@ public class CoffeeScriptIntegrationTest {
 			"    hello_world = new HelloWorld;\n" + 
 			"    return expect(hello_world.greeting()).toBe(\"Hello, World\");\n" + 
 			"  });\n" + 
-			"});\n";
+			"});";
 	
 	private static final boolean BARE_OPTION = false;
 
@@ -61,7 +63,8 @@ public class CoffeeScriptIntegrationTest {
 	public void itReliesOnTheCache() throws Exception {
 		String expected = "win";
 		subject.compile(COFFEE, BARE_OPTION);
-		injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+		CoffeeEval eval = new CoffeeEval(COFFEE, BARE_OPTION);
+		injectFakeCache(Collections.singletonMap(eval.getCacheKey(), expected));
 		
 		String result = subject.compile(COFFEE, BARE_OPTION);
 		
@@ -70,12 +73,14 @@ public class CoffeeScriptIntegrationTest {
 
 	@Test
 	public void itReliesOnTheCacheBareOptionChangeActive() throws Exception {
-		String expected = "bare false";
+		final String unexpected = "bare false";
 		subject.compile(COFFEE, BARE_OPTION);
-		injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+		final CoffeeEval eval = new CoffeeEval(COFFEE, BARE_OPTION);
+		injectFakeCache(new HashMap<String, String>(){{put(eval.getCacheKey(), unexpected);}});
+		
 		String result = subject.compile(COFFEE, true);
-
-		assertThat(result,is(expected));
+		
+		assertThat(result,is(BARE_JAVASCRIPT));
 	}
 
 	private void injectFakeCache(Map<String,String> cacheMap) throws Exception {
