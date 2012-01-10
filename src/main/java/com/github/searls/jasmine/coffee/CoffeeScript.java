@@ -34,12 +34,20 @@ public class CoffeeScript {
 	};
 	
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
-	
+
+	/**
+	 * @deprecated {@link #compile(String, boolean)}
+	 */
+	@Deprecated
 	public String compile(String coffee) throws IOException {
+		return this.compile(coffee, false);
+	}
+
+	public String compile(String coffee, boolean bareOption) throws IOException {
 		String escapedCoffee = StringEscapeUtils.escapeJavaScript(coffee);
 		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(escapedCoffee);
 	}
-	
+
 	private String compileAndCache(String input) {
 		ScriptResult scriptResult = htmlPage.get().executeJavaScript(String.format("CoffeeScript.compile(\"%s\");", input));
 		String result = (String) scriptResult.getJavaScriptResult();
