@@ -15,13 +15,13 @@ import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
 public class HandlesRequestsForCoffee {
 	private CoffeeScript coffeeScript = new CoffeeScript();
 	private BuildsJavaScriptToWriteFailureHtml buildsJavaScriptToWriteFailureHtml = new BuildsJavaScriptToWriteFailureHtml(); 
-	
+
 	public void handle(Request baseRequest, HttpServletResponse response, Resource resource, boolean bareOption) throws IOException {
 		baseRequest.setHandled(true);
 		String javascript = compileCoffee(resource, bareOption);
 		setHeaders(response, resource, javascript);
 		writeResponse(response, javascript);
-	}
+	  }
 
 	private void writeResponse(HttpServletResponse response, String javascript) throws IOException {
 		response.getWriter().write(javascript);
