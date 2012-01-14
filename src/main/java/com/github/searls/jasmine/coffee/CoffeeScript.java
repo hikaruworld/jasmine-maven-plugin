@@ -35,15 +35,15 @@ public class CoffeeScript {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
 	public String compile(String coffee, boolean bareOption) throws IOException {
-		CoffeeBeans coffeeEval = new CoffeeBeans(coffee, bareOption);
-		String escapedCoffee = coffeeEval.getCacheKey();
-		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(coffeeEval);
+		CoffeeBeans beans = new CoffeeBeans(coffee, bareOption);
+		String escapedCoffee = beans.getCacheKey();
+		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(beans);
 	}
 
-	private String compileAndCache(CoffeeBeans inputEval) {
-		ScriptResult scriptResult = htmlPage.get().executeJavaScript(inputEval.createCoffeeScriptFunction());
+	private String compileAndCache(CoffeeBeans beans) {
+		ScriptResult scriptResult = htmlPage.get().executeJavaScript(beans.createCoffeeScriptFunction());
 		String result = (String) scriptResult.getJavaScriptResult();
-		cache.put(inputEval.getCacheKey(),result);
+		cache.put(beans.getCacheKey(),result);
 		return result;
 	}
 
