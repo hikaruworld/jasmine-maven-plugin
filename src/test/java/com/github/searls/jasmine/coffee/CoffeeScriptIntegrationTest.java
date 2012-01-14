@@ -32,13 +32,13 @@ public class CoffeeScriptIntegrationTest {
 		"}).call(this);\n";
 
 	private static final String BARE_JAVASCRIPT = 
-			"describe(\"HelloWorld\", function() {\n" + 
-			"  return it(\"should say hello\", function() {\n" + 
-			"    var hello_world;\n" + 
-			"    hello_world = new HelloWorld;\n" + 
-			"    return expect(hello_world.greeting()).toBe(\"Hello, World\");\n" + 
-			"  });\n" + 
-			"});";
+		"\ndescribe(\"HelloWorld\", function() {\n" + 
+		"  return it(\"should say hello\", function() {\n" + 
+		"    var hello_world;\n" + 
+		"    hello_world = new HelloWorld;\n" + 
+		"    return expect(hello_world.greeting()).toBe(\"Hello, World\");\n" + 
+		"  });\n" + 
+		"});\n";
 	
 	private static final boolean BARE_OPTION = false;
 
