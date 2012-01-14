@@ -60,7 +60,7 @@ public class HandlesRequestsForCoffeeTest {
 
   @Test
   public void setCharacterEncodingToJavaScript() throws IOException {
-    subject.handle(baseRequest, response, resource, false);
+    subject.handle(baseRequest, response, resource, BARE_OPTION);
 
     verify(response).setCharacterEncoding("UTF-8");
   }
@@ -90,9 +90,9 @@ public class HandlesRequestsForCoffeeTest {
   @Test
   public void whenCoffeeCompilesHasMultiByteThenWriteIt() throws IOException {
     String expected = "あいうえお.coffee";
-    when(coffeeScript.compile(COFFEE, false)).thenReturn(expected);
+    when(coffeeScript.compile(COFFEE, BARE_OPTION)).thenReturn(expected);
 
-    subject.handle(baseRequest, response, resource, false);
+    subject.handle(baseRequest, response, resource, BARE_OPTION);
 
     verify(response.getWriter()).write(expected);
     verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(expected.getBytes("UTF-8").length));
