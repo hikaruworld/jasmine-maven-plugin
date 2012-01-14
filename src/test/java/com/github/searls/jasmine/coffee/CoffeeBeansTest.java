@@ -7,13 +7,13 @@ import java.lang.reflect.Field;
 
 import org.junit.Test;
 
-public class CoffeeCupTest {
+public class CoffeeBeansTest {
 	private static final String COFFEE = "coffee";
 	private static final boolean BARE_OPTION = false;
 
 	@Test
 	public void constructionProperty() throws Exception {
-		CoffeeCup cup = new CoffeeCup(COFFEE, true);
+		CoffeeBeans cup = new CoffeeBeans(COFFEE, true);
 		
 		assertThat((String)getFieldValue(cup, "coffee"),is(COFFEE));
 		assertThat((Boolean)getFieldValue(cup, "bareOption"),is(true));
@@ -22,7 +22,7 @@ public class CoffeeCupTest {
 	@Test
 	public void getCacheKeyResult() throws Exception {
 		String expected = "Eval#coffee,Options#null";
-		CoffeeCup cup = new CoffeeCup(COFFEE, BARE_OPTION);
+		CoffeeBeans cup = new CoffeeBeans(COFFEE, BARE_OPTION);
 		
 		assertThat(cup.getCacheKey(),is(expected));
 	}
@@ -30,14 +30,14 @@ public class CoffeeCupTest {
 	@Test
 	public void whenCoffeeNullGetCacheKeyResult() throws Exception {
 		String expected = "Eval#null,Options#null";
-		CoffeeCup cup = new CoffeeCup(null, BARE_OPTION);
+		CoffeeBeans cup = new CoffeeBeans(null, BARE_OPTION);
 		
 		assertThat(cup.getCacheKey(),is(expected));
 	}
 	
 	@Test
 	public void escapeResult() throws Exception {
-		CoffeeCup cup = new CoffeeCup("あいうえお", true);
+		CoffeeBeans cup = new CoffeeBeans("あいうえお", true);
 		
 		assertThat(cup.escape(),is("\\u3042\\u3044\\u3046\\u3048\\u304A"));
 	}
@@ -45,7 +45,7 @@ public class CoffeeCupTest {
 	@Test
 	public void getOptionsReturnBareOptionIsTrue() throws Exception {
 		String expected = "{bare: true}";
-		CoffeeCup cup = new CoffeeCup(COFFEE, true);
+		CoffeeBeans cup = new CoffeeBeans(COFFEE, true);
 
 		assertThat(cup.getOptions(),is(expected));
 	}
@@ -53,12 +53,12 @@ public class CoffeeCupTest {
 	@Test
 	public void getOptionsReturnBareOptionIsFalse() throws Exception {
 		String expected = null;
-		CoffeeCup cup = new CoffeeCup(COFFEE, false);
+		CoffeeBeans cup = new CoffeeBeans(COFFEE, false);
 
 		assertThat(cup.getOptions(),is(expected));
 	}
 
-	private static Object getFieldValue(CoffeeCup cup, String fieldName) throws Exception {
+	private static Object getFieldValue(CoffeeBeans cup, String fieldName) throws Exception {
 		Field field = cup.getClass().getDeclaredField(fieldName);
 		field.setAccessible(true);
 		

@@ -2,7 +2,7 @@ package com.github.searls.jasmine.coffee;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-public class CoffeeCup {
+public class CoffeeBeans {
 	private String coffee;
 	private boolean bareOption;
 	
@@ -10,7 +10,7 @@ public class CoffeeCup {
 	
 	private static final String BARE_OPTION_ENABLED = "{bare: true}";
 	
-	public CoffeeCup(String coffee, boolean bareOption) {
+	public CoffeeBeans(String coffee, boolean bareOption) {
 		this.coffee = coffee;
 		this.bareOption = bareOption;
 	}
